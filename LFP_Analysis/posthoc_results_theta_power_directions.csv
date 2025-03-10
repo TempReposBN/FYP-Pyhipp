@@ -1,0 +1,13 @@
+channel,start_position,group1,group2,mean_diff,p_adj,lower,upper,reject
+019,32,East,South,-1.6638,0.0096,-2.9068,-0.4207,True
+029,32,East,South,-1.5042,0.0105,-2.6426,-0.3657,True
+029,35,North,South,-2.2096,0.0334,-4.2757,-0.1436,True
+029,35,North,West,-2.4265,0.0201,-4.5329,-0.3201,True
+029,35,South,West,-0.2169,0.9252,-1.6024,1.1686,False
+030,31,East,North,1.4526,0.0467,0.0218,2.8833,True
+030,32,East,South,-1.6513,0.0075,-2.8446,-0.4579,True
+045,31,East,North,1.4096,0.0456,0.0281,2.791,True
+045,32,East,South,-1.6118,0.0083,-2.7922,-0.4315,True
+045,35,North,South,-2.4297,0.0346,-4.714,-0.1454,True
+045,35,North,West,-1.7183,0.1876,-4.0472,0.6107,False
+045,35,South,West,0.7115,0.5084,-0.8204,2.2433,False
