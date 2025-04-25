@@ -227,6 +227,49 @@ def get_control_segments(lfp_data, markers, timeStamps, window_size = 1000):
     
     return lfp_segmented
 
+def get_navigation_segments(lfp_data, markers, timeStamps, window_size = 7000):
+    cue_offsets =[21,22,23,24,25,26]
+    end_trial = [31,32,33,34,35,36]
+    annotations = []
+    timeStamps = np.array(timeStamps).flatten()
+
+    for i, m in enumerate(np.array(markers).flatten()):
+        annotations.append([int(m), timeStamps[i]])  # get [[marker, timestamp], ....]
+
+    annotations = sorted(annotations, key=lambda x: x[1])  # sort by ascending timestamps
+    lfp_segmented = pd.DataFrame(columns=['segment', 'channel', 'start_position', 'goal_poster'])
+
+    for i, [marker, timeStamps] in enumerate(annotations):
+
+        # Check if the marker is an End Trial Marker
+        if marker in cue_offsets:
+            if i + 1 < len(annotations):
+                next_cue = annotations[i + 1]
+                # Check if the next cue is Cue Onset Marker
+                if next_cue[0] in end_trial:
+                    start_idx = int(next_cue[1] * 1000) - window_size
+                    end_idx = start_idx + window_size
+
+                    # Get a list of Windowed Segments from All Channel for this Cue Onset
+                    segments = [
+                        ch[start_idx:end_idx]
+                        for ch in lfp_data['lfp_data']
+                    ]
+
+                    new_rows = [
+                        {
+                            'segment': seg,
+                            'channel': lfp_data['channel'][ch_idx],
+                            'start_position': annotations[i-1][0],
+                            'goal_poster': int(next_cue[0])
+                        }
+                        for ch_idx, seg in enumerate(segments)
+                    ]
+
+                    # Append new rows to the DataFrame all at once for efficiency
+                    lfp_segmented = pd.concat([lfp_segmented, pd.DataFrame(new_rows)], ignore_index=True)
+    
+    return lfp_segmented
 
 # TODO Finish this function to return fm object (maybe not fm object cuz they might lag?)
 def get_peak_fits(psd, freq, freq_range, max_n_peaks=3, peak_threshold=2):
