@@ -207,7 +207,7 @@ def run_analysis_pipeline(df, channels, dependent, factors, plot_groups=None, ou
         if not os.path.exists(chan_folder):
             os.makedirs(chan_folder)
         
-        ch_df = df[df['channel'] == f"{ch:03}"]
+        ch_df = df[df['channel'] == ch]
         formula = f"{dependent} ~ C({factors[0]}) * C({factors[1]})"
         model = ols(formula, data=ch_df).fit()
         anova_results = sm.stats.anova_lm(model, typ=2)
